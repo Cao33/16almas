@@ -44,9 +44,31 @@
          "width":32,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"CollideSuelo",
+         "objects":[
+                {
+                 "height":52,
+                 "id":1,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":520,
+                 "x":-5.33333333333333,
+                 "y":468.666666666667
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":2,
- "nextobjectid":1,
+ "nextlayerid":3,
+ "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.0",
