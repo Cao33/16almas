@@ -1,6 +1,6 @@
-import MainMenu from "./States/MainMenu.js";
-import PlayState from "./States/PlayState.js";
-import PauseState from "./States/PauseState.js";
+import MainMenu from './States/MainMenu.js';
+import PlayState from './States/PlayState.js';
+import PauseState from './States/PauseState.js';
 
 var config = {
     type: Phaser.CANVAS,
