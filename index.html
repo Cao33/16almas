@@ -1,13 +1,26 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Mi Sitio Web</title>
+    <title>16 Almas</title>
+    <script src="./phaser/phaser.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Contenido de tu sitio web -->
-    <h1>16 almas</h1>
-    <p>Sitio web donde se alojará el juego indie 16 almas</p>
-    <p>*Juego en desarrollo* No molestar</p>
+    <header>
+        <h1>
+            <button id="toggleSidebar">☰</button>
+        </h1>
+    </header>
+
+    <div class="sidebar">
+        <a href="#seccion1">Sección 1</a>
+        <a href="#seccion2">Sección 2</a>
+    </div>
+
+    <div class="canvas">
+        <script type="module" src="src/Game.js" ></script>
+        <canvas id="juego"></canvas>
+      </div>  
+
 </body>
 </html>

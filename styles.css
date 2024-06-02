@@ -1,12 +1,55 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #333;
 }
 
 h1 {
-    color: #333;
+    background-color: #151414; /* Gris clarito para el cabecero */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+    color: #761b1b;
+    margin: 0;
 }
 
-p {
-    font-size: 16px;
+button {
+    background-color: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #c50f7f;
+}
+
+/* Estilo de la barra lateral */
+.sidebar {
+    width: 0%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #307135;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.sidebar a {
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #3b397a;
+}
+
+.canvas {
+    margin: auto;
 }
