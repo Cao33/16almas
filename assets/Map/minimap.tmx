@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="2">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="32" height="35" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="4">
  <editorsettings>
   <export target="minimap.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="NatureTiles" tilewidth="16" tileheight="16" tilecount="1700" columns="68">
   <image source="Nature/Tiles.png" width="1100" height="400"/>
  </tileset>
- <layer id="1" name="Tile Layer 1" width="32" height="32">
+ <layer id="1" name="Tile Layer 1" width="32" height="35">
   <data encoding="csv">
+1099,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -37,12 +38,16 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1099,0,0,0,0,1099,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 682,683,684,682,683,684,682,683,684,682,683,684,682,683,684,682,683,684,682,683,684,682,683,684,682,683,684,682,683,684,682,683,
 750,751,752,750,751,752,750,751,752,750,751,752,750,751,752,750,751,752,750,751,752,750,751,752,750,751,752,750,751,752,750,751,
 818,819,820,818,819,820,818,819,820,818,819,820,818,819,820,818,819,820,818,819,820,818,819,820,818,819,820,818,819,820,818,819
 </data>
  </layer>
  <objectgroup id="2" name="CollideSuelo">
-  <object id="1" x="-5.33333" y="468.667" width="520" height="52"/>
+  <object id="1" x="0" y="512" width="512" height="48"/>
+  <object id="2" x="0" y="416" width="16" height="80"/>
+  <object id="3" x="80" y="496" width="16" height="16"/>
  </objectgroup>
 </map>

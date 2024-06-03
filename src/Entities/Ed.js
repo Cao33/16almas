@@ -5,7 +5,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
         super(scene,x,y, 'Ed');
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
-        this.body.setCollideWorldBounds();
+        this.body.setCollideWorldBounds(true);
 
         this.a = this.scene.input.keyboard.addKey('A');
         this.d = this.scene.input.keyboard.addKey('D');
@@ -13,7 +13,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.speedX = 0;
 		this.speedY = 0; //la gravedad de la tierra
         this.seconds = 0; //segundos para usar en el mrua de la gravedad
-        this.jump=false;
+        this.floored=false;
 
         this.scene.anims.create({
 			key: 'EdIdleAnim',
@@ -32,31 +32,30 @@ export default class Ed extends Phaser.GameObjects.Sprite
         }
         else if(this.a.isDown){
             this.speedX=-200;
-            
         }
         else {
             this.speedX=0;
         }
-        
-        if(this.speedY>=0){
-            this.jump=false;
-        }
 
-        if(this.spaceKey.isDown&& !this.jump){
-            this.jump=true;
-            this.seconds=0;
-            this.speedY = -450;
+        if(this.body.blocked.down){
+            if(this.spaceKey.isDown){
+                this.seconds=0;
+                this.speedY = -450;
+            }
+            else{ //si está en el suelo
+                this.speedY=1; //si fuera 0 pasaria de ser body blocked a body embeded
+            }
         }
-        else{
+        else{ //lógica de caida
             this.speedY+=40*this.seconds;
         }
     }
 
     preUpdate(t,dt)
     {
-        super.preUpdate(t,dt);
         this.seconds+=dt/1000;
         this.move();
         this.body.setVelocity(this.speedX, this.speedY);
+        super.preUpdate(t,dt);
     }
 }

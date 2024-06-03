@@ -34,6 +34,19 @@ export default class PlayState extends Phaser.Scene {
         this.tileset = this.map.addTilesetImage('NatureTiles', 'tiles');
 
         this.backgroundLayer = this.map.createLayer('Tile Layer 1', this.tileset, 0, 0);
+
+        this.collideObjects = this.map.getObjectLayer('CollideSuelo').objects;
+        this.colliders = this.physics.add.staticGroup();
+
+        this.collideObjects.forEach(obj => {
+            const collider = this.colliders.create(obj.x, obj.y, null).setOrigin(0, 0);
+            collider.displayWidth = obj.width;
+            collider.displayHeight = obj.height;
+            collider.body.setSize(obj.width, obj.height);
+            collider.setVisible(false);
+        });
+
+        this.physics.add.collider(this.Ed, this.colliders);
     }
 
     update(t,dt)
