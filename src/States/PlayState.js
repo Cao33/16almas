@@ -39,7 +39,7 @@ export default class PlayState extends Phaser.Scene {
         this.colliders = this.physics.add.staticGroup();
 
         this.collideObjects.forEach(obj => {
-            const collider = this.colliders.create(obj.x, obj.y, null).setOrigin(0, 0);
+            const collider = this.colliders.create(obj.x, obj.y).setOrigin(0, 0);
             collider.displayWidth = obj.width;
             collider.displayHeight = obj.height;
             collider.body.setSize(obj.width, obj.height);
