@@ -5,8 +5,9 @@ export default class Ed extends Phaser.GameObjects.Sprite
         super(scene,x,y, 'Ed');
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
-        this.body.setCollideWorldBounds(true);
 
+        this.body.setCollideWorldBounds(true);
+        
         this.a = this.scene.input.keyboard.addKey('A');
         this.d = this.scene.input.keyboard.addKey('D');
         this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);

@@ -9,7 +9,8 @@ export default class PlayState extends Phaser.Scene {
     {
         this.load.spritesheet('EdIdle', './assets/Ed/Idle.png', {frameWidth: 32, frameHeight: 32});
         this.load.tilemapTiledJSON('map', './assets/Map/minimap.json');
-        this.load.image('tiles', './assets/Map/Nature/Tiles.png');
+        this.load.image('tilesN', './assets/Map/Nature/Tiles.png');
+        this.load.image('tilesM', './assets/Map/Medieval/Tiles.png');
     }
 
     create() 
@@ -31,22 +32,17 @@ export default class PlayState extends Phaser.Scene {
         this.Ed = new Ed(this,400,400);
 
         this.map = this.make.tilemap({ key: 'map' });
-        this.tileset = this.map.addTilesetImage('NatureTiles', 'tiles');
+        const tileset1 = this.map.addTilesetImage('NatureTiles', 'tilesN');
+        const tileset2 = this.map.addTilesetImage('MedievalTiles', 'tilesM');
 
-        this.backgroundLayer = this.map.createLayer('Tile Layer 1', this.tileset, 0, 0);
+        this.backgroundLayer = this.map.createLayer('Tile Layer 1', tileset1);
+        this.floorLayer = this.map.createLayer('Suelo', tileset2);
+        this.floorLayer.setCollisionBetween(0, 9999);
 
-        this.collideObjects = this.map.getObjectLayer('CollideSuelo').objects;
-        this.colliders = this.physics.add.staticGroup();
+        this.cameras.main.startFollow(this.Ed);
+        this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 
-        this.collideObjects.forEach(obj => {
-            const collider = this.colliders.create(obj.x, obj.y).setOrigin(0, 0);
-            collider.displayWidth = obj.width;
-            collider.displayHeight = obj.height;
-            collider.body.setSize(obj.width, obj.height);
-            collider.setVisible(false);
-        });
-
-        this.physics.add.collider(this.Ed, this.colliders);
+        this.physics.add.collider(this.Ed,this.floorLayer);
     }
 
     update(t,dt)
