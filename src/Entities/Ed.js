@@ -6,8 +6,6 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
 
-        //this.body.setCollideWorldBounds(true);
-
         this.a = this.scene.input.keyboard.addKey('A');
         this.d = this.scene.input.keyboard.addKey('D');
         this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -28,10 +26,10 @@ export default class Ed extends Phaser.GameObjects.Sprite
 
     move()
     {
-        if(this.d.isDown){
+        if(this.d.isDown && this.x<(this.scene.map.widthInPixels-this.width/2)){
             this.speedX=200;
         }
-        else if(this.a.isDown){
+        else if(this.a.isDown && this.x>0+this.width/2){
             this.speedX=-200;
         }
         else {
@@ -54,6 +52,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
 
     preUpdate(t,dt)
     {
+        console.log(this.x);
         this.seconds+=dt/1000;
         this.move();
         this.body.setVelocity(this.speedX, this.speedY);

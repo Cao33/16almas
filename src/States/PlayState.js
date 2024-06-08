@@ -33,19 +33,23 @@ export default class PlayState extends Phaser.Scene {
             this.scene.start('PauseState');
         });
 
-        this.Ed = new Ed(this,400,879);
-
         this.map = this.make.tilemap({ key: 'map' });
         const tileset1 = this.map.addTilesetImage('NatureTiles', 'NatTiles');
         const tileset2 = this.map.addTilesetImage('MedievalTiles', 'MedTiles');
 
         this.backgroundLayer = this.map.createLayer('Tile Layer 1', tileset1);
-        this.floorLayer = this.map.createLayer('Suelo',tileset2);
+        this.floorLayer = this.map.createLayer('Suelo',tileset1);
         this.floorLayer.setCollisionBetween(0, 9999);
+
+        for (const point of this.map.getObjectLayer('Characters').objects) {
+            if (point.name == 'Ed') {
+                this.Ed = new Ed(this,point.x,point.y);
+            }
+        }
 
         this.cameras.main.startFollow(this.Ed);
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-
+        
         this.physics.add.collider(this.Ed,this.floorLayer);
     }
 
