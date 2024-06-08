@@ -22,6 +22,8 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.floored=false;
         this.activeInventory = false;
 
+        this.updates=0;
+
         this.scene.anims.create({
 			key: 'EdIdleAnim',
 			frames: scene.anims.generateFrameNumbers('EdIdle', { start: 0, end: 3}),
@@ -85,14 +87,12 @@ export default class Ed extends Phaser.GameObjects.Sprite
                     this.play('EdIdleAnim');
                 }
 
-            }
-    
+            }    
+
             if(this.body.blocked.down){
                 if(this.spaceKey.isDown){
-                    console.log('jump');
                     this.seconds=0;
                     this.speedY = -450;
-                    this.inventory.setVisible(false);
                 }
                 else{ //si está en el suelo
                     this.speedY=1; //si fuera 0 pasaria de ser body blocked a body embeded

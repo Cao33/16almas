@@ -25,6 +25,7 @@ export default class PlayState extends Phaser.Scene {
         this.load.image('MedTiles', './assets/Map/Medieval/Tiles.png');
         this.load.image('NatProps', './assets/Map/Nature/Props.png');
         this.load.image('MedProps', './assets/Map/Medieval/Props.png');
+        this.load.image('Sky', './assets/Propios/BackSkyParallax.png');
     }
 
     create() 
@@ -49,6 +50,12 @@ export default class PlayState extends Phaser.Scene {
         const tileset1 = this.map.addTilesetImage('NatureTiles', 'NatTiles');
         const tileset2 = this.map.addTilesetImage('MedievalTiles', 'MedTiles');
 
+        const w = this.scale.width;
+		const h = this.scale.height;
+        const numbs = this.map.widthInPixels/w +1;
+        for(let i= 0; i<numbs;i++){
+            this.add.image(w*i,h,'Sky').setScrollFactor(0.75);
+        }
         //this.parallaxLayer1 = this.map.createLayer('Background', tileset1);
         //this.parallaxLayer1.setScrollFactor(0.75);
 
