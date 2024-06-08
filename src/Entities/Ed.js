@@ -89,6 +89,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
     
             if(this.body.blocked.down){
                 if(this.spaceKey.isDown){
+                    console.log('jump');
                     this.seconds=0;
                     this.speedY = -450;
                     this.inventory.setVisible(false);

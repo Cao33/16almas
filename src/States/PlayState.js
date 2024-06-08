@@ -18,7 +18,7 @@ export default class PlayState extends Phaser.Scene {
         this.load.spritesheet('BoyIdle', './assets/Villagers/BoyIdle.png', {frameWidth: 48, frameHeight: 48});
         this.load.spritesheet('GirlIdle', './assets/Villagers/GirlIdle.png', {frameWidth: 48, frameHeight: 48});
         this.npcCount=0;
-        let npcArray
+        this.npcArray = [];
         this.load.image('InventoryPNG', './assets/Propios/InventorySprite.png');
         this.load.tilemapTiledJSON('map', './assets/Map/minimap.json');
         this.load.image('NatTiles', './assets/Map/Nature/Tiles.png');
@@ -49,6 +49,9 @@ export default class PlayState extends Phaser.Scene {
         const tileset1 = this.map.addTilesetImage('NatureTiles', 'NatTiles');
         const tileset2 = this.map.addTilesetImage('MedievalTiles', 'MedTiles');
 
+        //this.parallaxLayer1 = this.map.createLayer('Background', tileset1);
+        //this.parallaxLayer1.setScrollFactor(0.75);
+
         this.backgroundLayer = this.map.createLayer('Tile Layer 1', tileset1);
         this.floorLayer = this.map.createLayer('Suelo',tileset1);
         this.floorLayer.setCollisionBetween(0, 9999);
@@ -59,7 +62,7 @@ export default class PlayState extends Phaser.Scene {
             }
             else if (point.name == 'NPC') {
                 this.npcCount++;
-                //this.npcArray.push(new NPC(this,point.x,point.y));
+                this.npcArray.push(new NPC(this,point.x,point.y, 'OldManIdle'));
             }
             console.log(this.npcCount);
         }
