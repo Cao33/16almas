@@ -12,6 +12,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.a = this.scene.input.keyboard.addKey('A');
         this.d = this.scene.input.keyboard.addKey('D');
         this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        
         this.e = this.scene.input.keyboard.addKey('E');
         this.e.on('down', this.talkTo, this);
 
@@ -58,7 +59,6 @@ export default class Ed extends Phaser.GameObjects.Sprite
 
         this.i = this.scene.input.keyboard.addKey('I');
         this.i.on('down', this.manageInv, this);
-
         this.personalityActive=null;
     }
 
@@ -76,8 +76,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
             this.inventory.setVisible(true);
             for(let i=0;i<16;i++){
                 this.personalitiesArray[i].setPosition((this.inventory.x-this.inventory.width/2) + 100 +200*(i%4), (this.inventory.y-this.inventory.height/2) + 125 + 100*((i/4)|0));
-                console.log(i/4);
-                this.personalitiesArray[i].setVisible(true);
+                        this.personalitiesArray[i].setVisible(true);
             }
             this.activeInventory=true;
         }
@@ -140,6 +139,11 @@ export default class Ed extends Phaser.GameObjects.Sprite
     talkTo(){
         if(this.enableTalk){
             this.overlappingNPC.openDialogue();
+            for(let i = 0; i<16;i++){
+                if(this.personalitiesArray[i].newTexture=='ENTP'){
+                    this.personalitiesArray[i].addPersonality();    
+                }
+            }
         }
     }
 
@@ -149,6 +153,10 @@ export default class Ed extends Phaser.GameObjects.Sprite
             this.personalitiesArray[i].setVisible(false);
             this.scene.add.existing(this.personalitiesArray[i]);
         }
+    }
+
+    selectPersonality(name){
+        this.personalityActive=name;
     }
 
     preUpdate(t,dt)

@@ -15,7 +15,8 @@ export default class PauseState extends Phaser.Scene {
         }).setInteractive();
 
         this.startButton.on('pointerdown', () => {
-            this.scene.start('PlayState');
+            this.scene.stop();
+            this.scene.run('PlayState'); 
         });
 
         this.menuButton = this.add.text(200, 200, 'Go Menu', {
@@ -24,7 +25,8 @@ export default class PauseState extends Phaser.Scene {
         }).setInteractive();
 
         this.menuButton.on('pointerdown', () => {
-            this.scene.start('MainMenu');
+            this.scene.stop();
+            this.scene.run('MainMenu');
         });
     }
 }

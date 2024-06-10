@@ -100,19 +100,18 @@ export default class PlayState extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 
         this.physics.add.collider(this.Ed,this.floorLayer);
+
+        this.esc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        this.esc.on('down',this.goPause,this) ;
     }
 
-    showInventory(){
-        //cuando se pulse la i se mostrará el inventario y las cartas
-    }
-
-    createPersonalities(){
-
+    goPause(){
+        this.scene.sleep();
+        this.scene.run('PauseState');
     }
 
     update(t,dt)
     {
-
     }
 }
 
