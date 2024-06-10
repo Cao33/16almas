@@ -4,6 +4,7 @@ export default class NPC extends Phaser.GameObjects.Sprite
     {
         super(scene,x,y);
         this.scene.add.existing(this);
+        this.scene.physics.add.existing(this);
         this.name=npcFile
         this.scene.anims.create({
             key: 'Idle',
@@ -11,7 +12,14 @@ export default class NPC extends Phaser.GameObjects.Sprite
             frameRate: 10,
             repeat: -1
         });
-        this.setScale(-1,1);
         this.play('Idle');
+    }
+
+    openDialogue(){
+        console.log('dialogo');
+    }
+
+    preUpdate(t,dt){
+        super.preUpdate(t,dt);
     }
 }

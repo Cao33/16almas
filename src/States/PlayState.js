@@ -26,6 +26,10 @@ export default class PlayState extends Phaser.Scene {
         this.load.image('NatProps', './assets/Map/Nature/Props.png');
         this.load.image('MedProps', './assets/Map/Medieval/Props.png');
         this.load.image('Sky', './assets/Propios/BackSkyParallax.png');
+        this.load.image('Sky', './assets/Propios/BackSkyParallax.png');
+
+        this.load.image('card1', './assets/Personalidades/Reverso/ENFJ.png');
+        this.load.image('card2', './assets/Personalidades/Reverso/ENFP.png');
     }
 
     create() 
@@ -56,8 +60,6 @@ export default class PlayState extends Phaser.Scene {
         for(let i= 0; i<numbs;i++){
             this.add.image(w*i,h,'Sky').setScrollFactor(0.75);
         }
-        //this.parallaxLayer1 = this.map.createLayer('Background', tileset1);
-        //this.parallaxLayer1.setScrollFactor(0.75);
 
         this.backgroundLayer = this.map.createLayer('Tile Layer 1', tileset1);
         this.floorLayer = this.map.createLayer('Suelo',tileset1);
@@ -69,9 +71,8 @@ export default class PlayState extends Phaser.Scene {
             }
             else if (point.name == 'NPC') {
                 this.npcCount++;
-                this.npcArray.push(new NPC(this,point.x,point.y, 'OldManIdle'));
+                this.npcArray.push(new NPC(this,point.x,point.y, 'OldManIdle')); //cambiar el npc file
             }
-            console.log(this.npcCount);
         }
 
         this.cameras.main.startFollow(this.Ed);

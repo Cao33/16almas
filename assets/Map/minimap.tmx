@@ -150,13 +150,13 @@
   <object id="7" name="Ed" x="443.333" y="877.333">
    <point/>
   </object>
-  <object id="8" name="NPC" x="804" y="858.667">
+  <object id="8" name="NPC" x="807.667" y="884.667">
    <point/>
   </object>
-  <object id="9" name="NPC" x="970.667" y="857.333">
+  <object id="9" name="NPC" x="970.667" y="886">
    <point/>
   </object>
-  <object id="10" name="NPC" x="1182.67" y="858.667">
+  <object id="10" name="NPC" x="1185.04" y="885.167">
    <point/>
   </object>
  </objectgroup>

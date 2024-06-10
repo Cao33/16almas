@@ -1,4 +1,5 @@
 import Inventory from './Inventory.js';
+import Personalities from './Personalities.js';
 
 export default class Ed extends Phaser.GameObjects.Sprite
 {
@@ -12,6 +13,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.d = this.scene.input.keyboard.addKey('D');
         this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.e = this.scene.input.keyboard.addKey('E');
+        this.e.on('down', this.talkTo, this);
 
         this.i = this.scene.input.keyboard.addKey('I');
         this.i.on('down', this.manageInv, this);
@@ -19,8 +21,11 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.speedX = 0;
 		this.speedY = 0;
         this.seconds = 0; //segundos para usar en el mrua de la gravedad
-        this.floored=false;
+        
         this.activeInventory = false;
+
+        this.overlappingNPC = null;
+        this.enableTalk=false;
 
         this.updates=0;
 
@@ -44,12 +49,16 @@ export default class Ed extends Phaser.GameObjects.Sprite
 			frameRate: 10,
 			repeat: -1
 		});
+        this.play('EdIdleAnim');
 
         this.camera = this.scene.cameras.main;
         this.inventory = new Inventory(this.scene,0,0);
         this.inventory.setVisible(false);
 
-        this.play('EdIdleAnim');
+        this.carta1 = new Personalities(this.scene, this.x, this.y, 'card1', 'card2', 'Variable1', 'Variable2', 'Variable3', 'Variable4', 'Variable5');
+        this.inventory.addCarta(this.carta1);
+
+        this.personalityActive=null;
     }
 
     manageInv(){
@@ -104,11 +113,33 @@ export default class Ed extends Phaser.GameObjects.Sprite
         }
     }
 
+    checkNPC() {
+        this.overlappingNPC = null; // Reiniciar el NPC con el que se está superponiendo
+
+        this.scene.npcArray.forEach(npc => {
+            if (this.scene.physics.overlap(this, npc)) {
+                this.overlappingNPC = npc; // Almacenar el NPC con el que se está superponiendo
+                this.enableTalk=true;
+            }
+        });
+
+        if(this.overlappingNPC==null){
+            this.enableTalk=false;
+        }
+    }
+
+    talkTo(){
+        if(this.enableTalk){
+            this.overlappingNPC.openDialogue();
+        }
+    }
+
     preUpdate(t,dt)
     {
         this.seconds+=dt/1000;
         this.inputLogic();
         this.body.setVelocity(this.speedX, this.speedY);
+        this.checkNPC();
         super.preUpdate(t,dt);
     }
 }
