@@ -15,8 +15,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.e = this.scene.input.keyboard.addKey('E');
         this.e.on('down', this.talkTo, this);
 
-        this.i = this.scene.input.keyboard.addKey('I');
-        this.i.on('down', this.manageInv, this);
+        
 
         this.speedX = 0;
 		this.speedY = 0;
@@ -54,10 +53,11 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.camera = this.scene.cameras.main;
         this.inventory = new Inventory(this.scene,0,0);
         this.inventory.setVisible(false);
+        this.personalitiesArray=[];
+        this.personalitiesTraits=['ENFJ','ENFP','ENTJ','ENTP','ESFJ','ESFP','ESTJ','ESTP','INFJ','INFP','INTJ','INTP','ISFJ','ISFP','ISTJ','ISTP'];
 
-        this.carta1 = new Personalities(this.scene, this.x, this.y, 'ENFJr', 'ENFPr', 'Protagonista', 'E', 'N', 'F', 'J');
-        this.inventory.addCarta(this.carta1);
-        this.carta1.setVisible(false);
+        this.i = this.scene.input.keyboard.addKey('I');
+        this.i.on('down', this.manageInv, this);
 
         this.personalityActive=null;
     }
@@ -66,13 +66,19 @@ export default class Ed extends Phaser.GameObjects.Sprite
         if(this.activeInventory){
             this.inventory.setVisible(false);
             this.activeInventory=false;
-            this.carta1.setVisible(false);
+            for(let i=0;i<16;i++){
+                this.personalitiesArray[i].setVisible(false);
+            }
         }
         else{
             this.speedX=0;
             this.inventory.setPosition(this.camera.scrollX+this.camera.width/2, this.camera.scrollY+this.camera.height/2);
             this.inventory.setVisible(true);
-            this.carta1.setVisible(true);
+            for(let i=0;i<16;i++){
+                this.personalitiesArray[i].setPosition((this.inventory.x-this.inventory.width/2) + 100 +200*(i%4), (this.inventory.y-this.inventory.height/2) + 125 + 100*((i/4)|0));
+                console.log(i/4);
+                this.personalitiesArray[i].setVisible(true);
+            }
             this.activeInventory=true;
         }
     }
@@ -134,6 +140,14 @@ export default class Ed extends Phaser.GameObjects.Sprite
     talkTo(){
         if(this.enableTalk){
             this.overlappingNPC.openDialogue();
+        }
+    }
+
+    createPersonalities(){
+        for(let i=0;i<16;i++){
+            this.personalitiesArray.push(new Personalities(this.scene, 0, 0, 'Block', this.personalitiesTraits[i]));
+            this.personalitiesArray[i].setVisible(false);
+            this.scene.add.existing(this.personalitiesArray[i]);
         }
     }
 

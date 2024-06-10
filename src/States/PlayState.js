@@ -1,7 +1,5 @@
 import Ed from '../Entities/Ed.js';
 import NPC from '../Entities/NPC.js';
-import Inventory from '../Entities/Inventory.js';
-import Personalities from '../Entities/Personalities.js';
 
 export default class PlayState extends Phaser.Scene {
 	constructor() {
@@ -34,40 +32,23 @@ export default class PlayState extends Phaser.Scene {
         this.load.spritesheet('GirlIdle', './assets/Villagers/GirlIdle.png', {frameWidth: 48, frameHeight: 48});
         //Inventory and personalities
         this.load.image('InventoryPNG', './assets/Propios/InventorySprite.png');
-        //Reverso
-        this.load.image('ENFJr', './assets/Personalidades/Reverso/ENFJ.png');
-        this.load.image('ENFPr', './assets/Personalidades/Reverso/ENFP.png');
-        this.load.image('ENTJr', './assets/Personalidades/Reverso/ENTJ.png');
-        this.load.image('ENTPr', './assets/Personalidades/Reverso/ENTP.png');
-        this.load.image('ESFJr', './assets/Personalidades/Reverso/ESFJ.png');
-        this.load.image('ESFPr', './assets/Personalidades/Reverso/ESFP.png');
-        this.load.image('ESTJr', './assets/Personalidades/Reverso/ESTJ.png');
-        this.load.image('ESTPr', './assets/Personalidades/Reverso/ESTP.png');
-        this.load.image('INFJr', './assets/Personalidades/Reverso/INFJ.png');
-        this.load.image('INFPr', './assets/Personalidades/Reverso/INFP.png');
-        this.load.image('INTJr', './assets/Personalidades/Reverso/INTJ.png');
-        this.load.image('INTPr', './assets/Personalidades/Reverso/INTP.png');
-        this.load.image('ISFJr', './assets/Personalidades/Reverso/ISFJ.png');
-        this.load.image('ISFPr', './assets/Personalidades/Reverso/ISFP.png');
-        this.load.image('ISTJr', './assets/Personalidades/Reverso/ISTJ.png');
-        this.load.image('ISTPr', './assets/Personalidades/Reverso/ISTP.png');
-        //Anverso
-        /*this.load.image('ENFJa', './assets/Personalidades/Anverso/ENFJ.png');
-        this.load.image('ENFPa', './assets/Personalidades/Anverso/ENFP.png');
-        this.load.image('ENTJa', './assets/Personalidades/Anverso/ENTJ.png');
-        this.load.image('ENTPa', './assets/Personalidades/Anverso/ENTP.png');
-        this.load.image('ESFJa', './assets/Personalidades/Anverso/ESFJ.png');
-        this.load.image('ESFPa', './assets/Personalidades/Anverso/ESFP.png');
-        this.load.image('ESTJa', './assets/Personalidades/Anverso/ESTJ.png');
-        this.load.image('ESTPa', './assets/Personalidades/Anverso/ESTP.png');
-        this.load.image('INFJa', './assets/Personalidades/Anverso/INFJ.png');
-        this.load.image('INFPa', './assets/Personalidades/Anverso/INFP.png');
-        this.load.image('INTJa', './assets/Personalidades/Anverso/INTJ.png');
-        this.load.image('INTPa', './assets/Personalidades/Anverso/INTP.png');
-        this.load.image('ISFJa', './assets/Personalidades/Anverso/ISFJ.png');
-        this.load.image('ISFPa', './assets/Personalidades/Anverso/ISFP.png');
-        this.load.image('ISTJa', './assets/Personalidades/Anverso/ISTJ.png');
-        this.load.image('ISTPa', './assets/Personalidades/Anverso/ISTP.png');*/
+        this.load.image('ENFJ', './assets/Personalidades/Reverso/ENFJ.png');
+        this.load.image('ENFP', './assets/Personalidades/Reverso/ENFP.png');
+        this.load.image('ENTJ', './assets/Personalidades/Reverso/ENTJ.png');
+        this.load.image('ENTP', './assets/Personalidades/Reverso/ENTP.png');
+        this.load.image('ESFJ', './assets/Personalidades/Reverso/ESFJ.png');
+        this.load.image('ESFP', './assets/Personalidades/Reverso/ESFP.png');
+        this.load.image('ESTJ', './assets/Personalidades/Reverso/ESTJ.png');
+        this.load.image('ESTP', './assets/Personalidades/Reverso/ESTP.png');
+        this.load.image('INFJ', './assets/Personalidades/Reverso/INFJ.png');
+        this.load.image('INFP', './assets/Personalidades/Reverso/INFP.png');
+        this.load.image('INTJ', './assets/Personalidades/Reverso/INTJ.png');
+        this.load.image('INTP', './assets/Personalidades/Reverso/INTP.png');
+        this.load.image('ISFJ', './assets/Personalidades/Reverso/ISFJ.png');
+        this.load.image('ISFP', './assets/Personalidades/Reverso/ISFP.png');
+        this.load.image('ISTJ', './assets/Personalidades/Reverso/ISTJ.png');
+        this.load.image('ISTP', './assets/Personalidades/Reverso/ISTP.png');
+        this.load.image('Block', './assets/Personalidades/Reverso/BLOCKED.png');
     }
 
     create() 
@@ -104,6 +85,7 @@ export default class PlayState extends Phaser.Scene {
         for (const point of this.map.getObjectLayer('Characters').objects) {
             if (point.name == 'Ed') {
                 this.Ed = new Ed(this,point.x,point.y);
+                this.Ed.createPersonalities();
             }
             else if (point.name == 'NPC') {
                 this.npcArray.push(new NPC(this,point.x,point.y, this.npcTextures[this.npcCount%6])); //cambiar el npc file
@@ -122,6 +104,10 @@ export default class PlayState extends Phaser.Scene {
 
     showInventory(){
         //cuando se pulse la i se mostrará el inventario y las cartas
+    }
+
+    createPersonalities(){
+
     }
 
     update(t,dt)
