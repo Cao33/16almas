@@ -55,8 +55,9 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.inventory = new Inventory(this.scene,0,0);
         this.inventory.setVisible(false);
 
-        this.carta1 = new Personalities(this.scene, this.x, this.y, 'card1', 'card2', 'Variable1', 'Variable2', 'Variable3', 'Variable4', 'Variable5');
+        this.carta1 = new Personalities(this.scene, this.x, this.y, 'ENFJr', 'ENFPr', 'Protagonista', 'E', 'N', 'F', 'J');
         this.inventory.addCarta(this.carta1);
+        this.carta1.setVisible(false);
 
         this.personalityActive=null;
     }
@@ -65,11 +66,13 @@ export default class Ed extends Phaser.GameObjects.Sprite
         if(this.activeInventory){
             this.inventory.setVisible(false);
             this.activeInventory=false;
+            this.carta1.setVisible(false);
         }
         else{
             this.speedX=0;
             this.inventory.setPosition(this.camera.scrollX+this.camera.width/2, this.camera.scrollY+this.camera.height/2);
             this.inventory.setVisible(true);
+            this.carta1.setVisible(true);
             this.activeInventory=true;
         }
     }

@@ -7,13 +7,13 @@ export default class Personalities extends Phaser.GameObjects.Sprite {
         this.var3 = var3;
         this.var4 = var4;
         this.var5 = var5;
-        this.setScale(0.5,0.5);
+        this.setScale(0.75,0.75);
         this.setInteractive();
         this.on('pointerdown', this.onSelect, this);
     }
 
     onSelect() {
-        console.log(`Carta seleccionada: ${this.var1}`);
+        console.log(`Carta seleccionada: `+ this.var2);
         this.setTexture(this.newTexture);
     }
 

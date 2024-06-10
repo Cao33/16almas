@@ -5,14 +5,13 @@ export default class NPC extends Phaser.GameObjects.Sprite
         super(scene,x,y);
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
-        this.name=npcFile
         this.scene.anims.create({
-            key: 'Idle',
+            key: npcFile,
             frames: scene.anims.generateFrameNumbers(npcFile, { start: 0, end: 3}),
             frameRate: 10,
             repeat: -1
         });
-        this.play('Idle');
+        this.play(npcFile);
     }
 
     openDialogue(){
