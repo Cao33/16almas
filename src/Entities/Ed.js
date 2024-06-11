@@ -1,5 +1,5 @@
-import Inventory from './Inventory.js';
 import Personalities from './Personalities.js';
+import Dialog from '../Components/Dialog.js';
 
 export default class Ed extends Phaser.GameObjects.Sprite
 {
@@ -8,16 +8,17 @@ export default class Ed extends Phaser.GameObjects.Sprite
         super(scene,x,y);
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
+        this.setDepth(1);
 
         this.a = this.scene.input.keyboard.addKey('A');
         this.d = this.scene.input.keyboard.addKey('D');
         this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         
         this.e = this.scene.input.keyboard.addKey('E');
-        this.e.on('down', this.talkTo, this);
+        this.e.on('down', this.interact, this);
 
         
-
+        this.maxFall=1000;
         this.speedX = 0;
 		this.speedY = 0;
         this.seconds = 0; //segundos para usar en el mrua de la gravedad
@@ -25,7 +26,10 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.activeInventory = false;
 
         this.overlappingNPC = null;
-        this.enableTalk=false;
+        this.canTalk=false;
+        this.talking=false;
+
+        this.overlappingCollectible=null;
 
         this.updates=0;
 
@@ -52,7 +56,8 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.play('EdIdleAnim');
 
         this.camera = this.scene.cameras.main;
-        this.inventory = new Inventory(this.scene,0,0);
+        this.inventory = this.scene.add.image(0,0,'InventoryPNG');
+        this.inventory.setDepth(1);
         this.inventory.setVisible(false);
         this.personalitiesArray=[];
         this.personalitiesTraits=['ENFJ','ENFP','ENTJ','ENTP','ESFJ','ESFP','ESTJ','ESTP','INFJ','INFP','INTJ','INTP','ISFJ','ISFP','ISTJ','ISTP'];
@@ -60,18 +65,34 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.i = this.scene.input.keyboard.addKey('I');
         this.i.on('down', this.manageInv, this);
         this.personalityActive=null;
+        this.numPersonalities=0;
+        this.canOpenChest=false;
+        this.overlappingChest=null;
+        this.firstDialogue=false;
+        this.dialogBox=null;
+        this.canCollect=false;
+        this.picking=false;
+
+        this.hasWine=false;
+        this.hasShield=false;
+        this.hasGummies=false;
+
+        this.canMove=true;
+
+        this.goldCount=0;
     }
 
     manageInv(){
         if(this.activeInventory){
             this.inventory.setVisible(false);
             this.activeInventory=false;
+            this.canMove=true;
             for(let i=0;i<16;i++){
                 this.personalitiesArray[i].setVisible(false);
             }
         }
         else{
-            this.speedX=0;
+            this.moveAbility(false);
             this.inventory.setPosition(this.camera.scrollX+this.camera.width/2, this.camera.scrollY+this.camera.height/2);
             this.inventory.setVisible(true);
             for(let i=0;i<16;i++){
@@ -84,7 +105,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
 
     inputLogic()
     {
-        if(!this.activeInventory){
+        if(this.canMove && !this.talking){
             if(this.d.isDown && this.x<(this.scene.map.widthInPixels-this.width/2)){
                 this.speedX=200;
                 if(this.anims.currentAnim.key!='EdRightAnim'){                    
@@ -112,39 +133,79 @@ export default class Ed extends Phaser.GameObjects.Sprite
                     this.speedY = -450;
                 }
                 else{ //si está en el suelo
-                    this.speedY=1; //si fuera 0 pasaria de ser body blocked a body embeded
+                    this.seconds=0; 
+                    this.speedY=200; //si fuera 0 pasaria de ser body blocked a body embeded
                 }
             }
             else{ //lógica de caida
-                this.speedY+=40*this.seconds;
+                if(this.speedY<this.maxFall){
+                    this.speedY+=40*this.seconds;
+                }
             }
         }
     }
 
-    checkNPC() {
+    checkInteract() {
         this.overlappingNPC = null; // Reiniciar el NPC con el que se está superponiendo
-
+        this.overlappingChest= null;
+        this.overlappingCollectible=null;
         this.scene.npcArray.forEach(npc => {
             if (this.scene.physics.overlap(this, npc)) {
                 this.overlappingNPC = npc; // Almacenar el NPC con el que se está superponiendo
-                this.enableTalk=true;
+                this.canTalk=true;
             }
         });
 
         if(this.overlappingNPC==null){
-            this.enableTalk=false;
+            this.canTalk=false;
+        }
+
+        this.scene.chestArray.forEach(chest => {
+            if (this.scene.physics.overlap(this, chest)) {
+                this.overlappingChest = chest; // Almacenar el NPC con el que se está superponiendo
+                this.canOpenChest=true;
+            }
+        });
+
+        if(this.overlappingChest==null){
+            this.canOpenChest=false;
+        }
+
+        this.scene.collectiblesArray.forEach(collect => {
+            if (this.scene.physics.overlap(this, collect)) {
+                this.overlappingCollectible = collect; // Almacenar el NPC con el que se está superponiendo
+                this.canCollect=true;
+            }
+        });
+
+        if(this.overlappingCollectible==null){
+            this.canCollect=false;
         }
     }
 
-    talkTo(){
-        if(this.enableTalk){
-            this.overlappingNPC.openDialogue();
-            for(let i = 0; i<16;i++){
-                if(this.personalitiesArray[i].newTexture=='ENTP'){
-                    this.personalitiesArray[i].addPersonality();    
-                }
-            }
+    interact(){ //puedo quitarme la mayoría de delayCalls y bool si hago que se cierren con el tiempo
+        if(this.firstDialogue){
+            this.dialogBox.hideDialog();
+            this.dialogBox=null;
+            this.firstDialogue=false;
+            this.moveAbility(true);
         }
+
+        if(this.canTalk&& this.canMove){
+            this.moveAbility(false);
+            this.overlappingNPC.openDialogue();
+        }
+
+        if(this.canOpenChest&&this.overlappingChest.closed){
+            this.moveAbility(false);
+            this.overlappingChest.open();
+        }
+
+        if(this.canCollect)
+            {
+                this.moveAbility(false);
+                this.overlappingCollectible.onCollect();
+            }
     }
 
     createPersonalities(){
@@ -157,6 +218,69 @@ export default class Ed extends Phaser.GameObjects.Sprite
 
     selectPersonality(name){
         this.personalityActive=name;
+        if(name[3]=='P'){
+            this.scene.airLayer.setVisible(true);
+        }
+        else{
+            this.scene.airLayer.setVisible(false);
+        }
+
+        if(name=='ISFP'){
+            this.scene.adventureLayer.setVisible(true);
+            this.scene.adventureNOCOLLayer.setVisible(true);
+        }
+        else{
+            this.scene.adventureLayer.setVisible(false);
+            this.scene.adventureNOCOLLayer.setVisible(false);
+        }
+    }
+
+    getPersonality(name){
+        for(let i = 0; i<16;i++){
+            if(this.personalitiesArray[i].newTexture==name){
+                this.personalitiesArray[i].addPersonality();    
+            }
+        }
+        this.numPersonalities++;
+    }
+
+    startGame(){
+        this.getPersonality('ENFJ');
+        this.dialogBox = new Dialog(this.scene, this.scene.cameras.main.scrollX, this.scene.cameras.main.scrollY + this.scene.sys.game.config.height - 120);
+        this.dialogBox.showDialog('Bienvenido al mundo Ed. Siento decirte que ahora mismo eres un ente sin personalidad pero hay noticias:\
+¡Puedes conseguir hasta 16 personalidades! ¿Cómo conseguirlas? Explora el mundo, abre cofres y habla con los aldeanos. Cada personalidad se compone de\
+4 componentes: Extraversión(E) vs Introversión(I), Intuición(N) vs Sensación(S), Pensamiento(T) vs Sentimiento(F) y Racionalidad(J) vs Percepción(P).\
+Ten esto en cuenta para determinadas ocasiones. Cuando quieras ver qué has conseguido hasta el momento solo pulsa la I, podrás seleccionar la que más\
+te guste pero cuidado, habrá momentos que solo algunas personalidades te servirán para seguir avanzando. Mucha suerte y disfruta del camino. (Pulsa E para cerrar)');
+        this.firstDialogue=true;
+        this.canMove=false;
+        this.scene.airLayer.setVisible(false);
+        this.scene.adventureLayer.setVisible(false);
+        this.scene.adventureNOCOLLayer.setVisible(false);
+    }
+
+    hasCollected(item){
+        if(item=='Vino'){this.hasWine=true;}
+        else if(item=='Escudo'){this.hasShield=true;}
+        else if(item=='Golosinas'){this.hasGummies=true;}
+        else if(item=='Monedas'){this.goldCount++;console.log(this.goldCount);}
+    }
+
+    moveAbility(able){
+        if(!able){
+            this.speedX=0;
+            this.canMove=false;
+            this.play('EdIdle');
+        }
+        else {this.canMove=true;}
+    }
+
+    seeAbility(item){
+        this.scene.collectiblesArray.forEach(collect => {
+            if (collect.name==item) {
+                collect.setVisible(true);
+            }
+        });
     }
 
     preUpdate(t,dt)
@@ -164,7 +288,7 @@ export default class Ed extends Phaser.GameObjects.Sprite
         this.seconds+=dt/1000;
         this.inputLogic();
         this.body.setVelocity(this.speedX, this.speedY);
-        this.checkNPC();
+        this.checkInteract();
         super.preUpdate(t,dt);
     }
 }

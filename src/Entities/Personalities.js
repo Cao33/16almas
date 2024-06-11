@@ -6,10 +6,14 @@ export default class Personalities extends Phaser.GameObjects.Sprite {
         this.setInteractive();
         this.on('pointerdown', this.onSelect, this);
         this.active=false;
+        this.setDepth(3);
     }
 
     onSelect() {
         if(this.active){
+            for(let i = 0; i<16;i++){
+                this.scene.Ed.personalitiesArray[i].setAlpha(1);
+            }
             this.scene.Ed.selectPersonality(this.newTexture);
             this.setAlpha(0.5);
         }

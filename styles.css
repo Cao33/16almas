@@ -1,6 +1,15 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #333;
+    background-color: #151414;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    margin-top: 20px;
 }
 
 h1 {
@@ -13,43 +22,16 @@ h1 {
     margin: 0;
 }
 
-button {
-    background-color: #333;
-    color: #fff;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #c50f7f;
-}
-
-/* Estilo de la barra lateral */
-.sidebar {
-    width: 0%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #307135;
-    overflow-x: hidden;
-    transition: 0.5s;
-}
-
-.sidebar a {
-    padding: 15px 25px;
-    text-decoration: none;
-    font-size: 20px;
-    color: #fff;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidebar a:hover {
-    background-color: #3b397a;
-}
-
 .canvas {
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.controls {
+    margin-top: 20px;
+    text-align: center;
+    color: white;
 }

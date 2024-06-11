@@ -9,7 +9,7 @@ var config = {
     height: 600,
     pixelArt: true,
     scale: {
-        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,         
+        autoCenter: Phaser.Scale.NO_CENTER,         
         min: {
         width: 256,
         height: 192
@@ -24,7 +24,7 @@ var config = {
         default: 'arcade', 
         arcade: { 
             gravity: { y: 0 }, 
-            debug: true
+            debug: false
         } 
     }             
 };

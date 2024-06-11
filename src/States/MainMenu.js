@@ -1,22 +1,23 @@
+import Button from "../Components/Buttons.js";
+
 export default class MainMenu extends Phaser.Scene {
 	constructor() {
 		super({ key: 'MainMenu' });
 	}
 
-    create() {
-        this.debugText = this.add.text(10, 10, 'MainMenu', {
-            font: '16px Arial',
-            fill: '#ffffff'
+    create() {        
+        const startButton = new Button(this, this.sys.game.config.width/2, 300, 200, 50, 'Start Game', () => {
+            this.scene.stop();
+            this.scene.run('PlayState'); //esto se debe cambiar cuando se haga un clean de la escena previa
         });
-        
-        this.startButton = this.add.text(100, 100, 'Start Game', {
-            font: '32px Arial',
-            fill: '#ffffff'
-        }).setInteractive();
 
-        this.startButton.on('pointerdown', () => {
+        const settingsButton = new Button(this, this.sys.game.config.width/2, 400, 200, 50, 'Resume Game', () => {
             this.scene.stop();
             this.scene.run('PlayState');
+        });
+
+        const creditsButton = new Button(this, this.sys.game.config.width/2, 500, 200, 50, 'Saved Game', () => {
+            // Aqui para añadir un guardado local
         });
     }
 }
