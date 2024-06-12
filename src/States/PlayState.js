@@ -63,94 +63,92 @@ export default class PlayState extends Phaser.Scene {
 
     create() 
     {        
-        this.startButton = this.add.text(100, 100, 'Go Pause', {
-            font: '32px Arial',
-            fill: '#ffffff'
-        }).setInteractive();
-
-        this.startButton.on('pointerdown', () => {
-            this.scene.start('PauseState');
-        });
-
+        //creamos el mapa y los tilesets
         this.map = this.make.tilemap({ key: 'map' });
         const tileset1 = this.map.addTilesetImage('NatureTiles', 'NatTiles');
         const tilesetProps = this.map.addTilesetImage('NatureProps', 'NatProps');
         const tilesetMedProps = this.map.addTilesetImage('MedievalProps', 'MedProps');
         const tileset2 = this.map.addTilesetImage('MedievalTiles', 'MedTiles');
-
-        this.physics.world.TILE_BIAS = 32;
-
+        
+        //Añadimos el fondo por imagen
         const texture = this.textures.get('Sky');
         const height = texture.getSourceImage().height;
         this.background = this.add.tileSprite(0, -300, this.scale.width, height, 'Sky');
         this.background.setOrigin(0, 0);
         this.background.setScrollFactor(0);
 
-        this.backgroundLayer = this.map.createLayer('Tile Layer 1', [tileset1, tilesetProps, tilesetMedProps]);
-        this.floorLayer = this.map.createLayer('Suelo',[tileset1, tileset2]);
+        //Creamos las layers del mapa
+        this.backgroundLayer = this.map.createLayer('Tile Layer 1', [tileset1, tilesetProps, tilesetMedProps]); //Decoraciones sin colisiones
+        this.floorLayer = this.map.createLayer('Suelo',[tileset1, tileset2]); //La capa que tiene los tiles a nivel de la tierra
+        this.airLayer = this.map.createLayer('Aire',tileset2); //la capa que contiene los tiles rojos en el aire
+        this.adventureLayer = this.map.createLayer('Adventure',tilesetProps); //la capa de nubes que tiene colisiones (el resto de los tiles en la NOCOL)
+        this.adventureNOCOLLayer = this.map.createLayer('AdventureNOCOL',tilesetProps); //Cumplimenta a adventureLayer pero no tiene colisiones
+        
+        //le damos colision a los tiles de ciertas capas con id entre 0 y 9999 (no hay tantos ids pero nos aseguramos que todos tengan colision)
         this.floorLayer.setCollisionBetween(0, 9999);
-        this.airLayer = this.map.createLayer('Aire',tileset2);
         this.airLayer.setCollisionBetween(0, 9999);
-        this.adventureLayer = this.map.createLayer('Adventure',tilesetProps);
-        this.adventureNOCOLLayer = this.map.createLayer('AdventureNOCOL',tilesetProps);
         this.adventureLayer.setCollisionBetween(0, 9999);
-
+        
+        //Recorremos la capa de Objetos y añadimos los objetos correspondientes
         for (const point of this.map.getObjectLayer('Characters').objects) {
             if (point.name == 'Ed') {
                 this.Ed = new Ed(this,point.x,point.y);
-                this.Ed.createPersonalities();
             }
-            else if (point.name == 'NPC') {
+            else if (point.name == 'NPC') { //Este es el NPC básico
                 this.npcArray.push(new NPC(this,point.x,point.y, this.npcTextures[this.npcCount%6], 'base', point.properties.find(prop => prop.name == 'dialogue').value));
                 this.npcCount++;
             }
-            else if (point.name == 'Final') {
+            else if (point.name == 'Final') { //Este es NPC pero tiene la forma de Ed y es el que determina el final del juego
                 this.npcArray.push(new NPC(this,point.x,point.y, 'EdIdle', 'final',0));
             }
-            else if(point.name=='Giver'){
+            else if(point.name=='Giver'){ //Estos NPCs te regalan una personalidad
                 this.npcTemp=new NPC(this,point.x,point.y, this.npcTextures[this.npcCount%6], 'giver',point.properties.find(prop => prop.name == 'dialogue').value);
-                this.npcTemp.whatPersonality(point.properties.find(prop => prop.name == 'personality').value);
+                this.npcTemp.whatPersonality(point.properties.find(prop => prop.name == 'personality').value); //la personalidad que entrega
                 this.npcArray.push(this.npcTemp);
                 this.npcCount++;
             }
-            else if(point.name=='Checker'){
+            else if(point.name=='Checker'){ //Estos NPCs te darán pistas solo si tienes ciertas personalidades seleccionadas
                 this.npcTemp=new NPC(this,point.x,point.y, this.npcTextures[this.npcCount%6], 'checker',point.properties.find(prop => prop.name == 'dialogue').value);
-                this.npcTemp.whatPersonality(point.properties.find(prop => prop.name == 'trait').value);
+                this.npcTemp.whatPersonality(point.properties.find(prop => prop.name == 'trait').value); //el componente de la personalidad que requiere
                 this.npcArray.push(this.npcTemp);
                 this.npcCount++;
             }
-            else if(point.name=='Mission'){
+            else if(point.name=='Mission'){ //Estos NPCs te dan una misión a cambio de una personalidad.
                 this.npcTemp=new NPC(this,point.x,point.y, this.npcTextures[this.npcCount%6], 'mission',point.properties.find(prop => prop.name == 'dialogue').value);
-                this.npcTemp.whatPersonality(point.properties.find(prop => prop.name == 'personality').value);
+                this.npcTemp.whatPersonality(point.properties.find(prop => prop.name == 'personality').value); //La personalidad que entrega
                 this.npcArray.push(this.npcTemp);
                 this.npcCount++;
             }
-            else if(point.name=='Chest'){
+            else if(point.name=='Chest'){ //Cofres que tienen personalidades
                 this.chestArray.push(new Chest(this,point.x,point.y,point.properties.find(prop => prop.name == 'name').value,point.properties.find(prop => prop.name == 'trait').value));
             }
-            else if(point.name=='Collectible'){
+            else if(point.name=='Collectible'){ //Los objetos que forman parte de las misiones
                 this.collectiblesArray.push(new Collectibles(this,point.x,point.y,point.properties.find(prop => prop.name == 'name').value));
             }
         }
-
+        //Añadimos una camara
         this.cameras.main.startFollow(this.Ed);
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-
+        //Ya creado Ed, añadimos las colisiones
         this.physics.add.collider(this.Ed,this.floorLayer);
         this.physics.add.collider(this.Ed,this.airLayer);
         this.physics.add.collider(this.Ed,this.adventureLayer);
-
+        //Mejoramos la detección de las colisiones para que Ed no atraviese los tiles
+        this.physics.world.TILE_BIAS = 32;
+        //Añadimos la tecla ESC para ir al menu de pausa
         this.esc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         this.esc.on('down',this.goPause,this) ;
-
+        //Lo último tiene que ser el startGame de Ed para que se inicie el primer dialogo y las personalidades
         this.Ed.startGame();
     }
 
-    goPause(){
+    //ir a menu de pausa
+    goPause(){ 
         this.scene.sleep();
         this.scene.run('PauseState');
     }
 
+    //al terminar el juego
     endGame(){
         this.scene.sleep();
         this.scene.run('MainMenu');
@@ -158,6 +156,7 @@ export default class PlayState extends Phaser.Scene {
 
     update(t,dt)
     {
+        //Hacemos update del background para dar efecto de parallax
         this.background.tilePositionX = this.cameras.main.scrollX * 0.5;
         this.background.tilePositionY = this.cameras.main.scrollY * 0.5;
     }

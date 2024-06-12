@@ -6,18 +6,10 @@ export default class MainMenu extends Phaser.Scene {
 	}
 
     create() {        
-        const startButton = new Button(this, this.sys.game.config.width/2, 300, 200, 50, 'Start Game', () => {
+        //Botón para jugar
+        const settingsButton = new Button(this, this.sys.game.config.width/2, 400, 200, 50, 'Play Game', () => {
             this.scene.stop();
-            this.scene.run('PlayState'); //esto se debe cambiar cuando se haga un clean de la escena previa
-        });
-
-        const settingsButton = new Button(this, this.sys.game.config.width/2, 400, 200, 50, 'Resume Game', () => {
-            this.scene.stop();
-            this.scene.run('PlayState');
-        });
-
-        const creditsButton = new Button(this, this.sys.game.config.width/2, 500, 200, 50, 'Saved Game', () => {
-            // Aqui para añadir un guardado local
+            this.scene.run('PlayState'); //se hace un run para mantener el progreso del player en vez de hacer start y reiniciar partida
         });
     }
 }

@@ -10,14 +10,15 @@ export default class Collectibles extends Phaser.GameObjects.Sprite{
     }
 
     onCollect(){
+        //creamos un dialogo nuevo y lo ajustamos usando la camara y la game config
         this.dialogBox=new Dialog(this.scene, this.scene.cameras.main.scrollX, this.scene.cameras.main.scrollY + this.scene.sys.game.config.height - 50);
         this.dialogBox.showDialog('Has recogido: '+ this.name);
-        this.scene.Ed.hasCollected(this.name); //pasar por aqui es una tonteria como el inventario
-        this.setVisible(false);
-        this.scene.time.delayedCall(3000, () => {
+        this.scene.Ed.hasCollected(this.name); //Avisamos a Ed de qué ha recogido
+        this.setVisible(false); //primero lo hacemos invisible porque si lo destruimos no puede seguir el código y salta un error
+        this.scene.time.delayedCall(3000, () => {//esperamos 3 segundos para que se pueda leer el dialogo primero
             this.dialogBox.hideDialog();
             this.scene.Ed.moveAbility(true);
-            this.destroy();
+            this.destroy();//por último lo destruimos
         });
     }
 }
